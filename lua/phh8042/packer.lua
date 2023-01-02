@@ -14,10 +14,10 @@ use {
 }
 
 use({
-    	'rose-pine/neovim',
-   	as = 'rose-pine',
+    use 'folke/tokyonight.nvim',
+   	as = 'tokyonight',
   	config = function()
-        	vim.cmd('colorscheme rose-pine')
+        	vim.cmd('colorscheme tokyonight')
     	end
 })
 
