@@ -4,7 +4,7 @@ sudo apt-get update
 
 if ! which nvim; then
     echo "Neovim not found, installing Neovim..."
-    sudo snap install nvim
+    sudo apt-get install neovim
 fi
 
 cp -r ~/dotfiles/init.lua/* ~/.config/nvim
