@@ -1,0 +1,12 @@
+#!bin/bash
+
+sudo apt-get update
+
+if ! which nvim; then
+    echo "Neovim noe found, installing Neovim..."
+    sudo snap install neovim
+fi
+
+cp -r ~/dotfiles/init.lua/* ~/.config/nvim
+
+
