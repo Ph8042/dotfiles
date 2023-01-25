@@ -2,20 +2,39 @@
 
 sudo apt update
 
+# Download ZSH
 if ! which zsh; then
     echo "Zsh not found, installing Zsh..."
     sudo apt install zsh
 fi
 
+# Set ZSH as default
 chsh -s $(which zsh)
 
+# Download Oh-My-Zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+# Download plugins for Oh-My-Zsh
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
+# Add and replace theme and plugins in .zshrc file
 echo "plugins=(git zsh-autosuggestions zsh-syntax-highlighting)" >> ~/.zshrc
-
 echo "ZSH_THEME='powerlevel10k/powerlevel10k'" >> ~/.zshrc
+
+# Download the MesloFont
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+
+# Move the downloaded fonts to the user's local font directory
+mkdir -p ~/.local/share/fonts
+mv MesloLGS* ~/.local/share/fonts/
+
+# Refresh font cache
+fc-cache -f -v
+
+# Set MesloFont as the default font in the terminal
+gsettings set org.gnome.terminal.legacy.profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')/ font 'MesloLGS NF Regular 12'
 
