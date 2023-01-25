@@ -1,0 +1,35 @@
+# List of my keybindings
+
+neofetch
+
+function cdd() {
+    cd ~/Developer
+}
+
+function s1() {
+    sudo apt update
+}
+
+function s2() {
+    sudo apt upgrade
+}
+
+function s3() {
+    apt list --upgradable
+}
+
+function gs() {
+    git status
+}
+
+function cl() {
+    clear
+}
+
+function g() {
+    git
+}
+
+function n() {
+    nvim .
+}

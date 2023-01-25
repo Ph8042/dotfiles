@@ -1,0 +1,31 @@
+#!bin/bash
+
+sudo apt-get update
+
+if ! which curl; then
+    echo "curl not found, installing curl..."
+    sudo apt install curl 
+fi
+
+if ! which ripgrep; then
+    echo "ripgrep not found, installing ripgrep..."
+    sudo apt install ripgrep 
+fi
+
+if ! which xsel; then
+    echo "xsel not found, installing xsel..."
+    sudo apt install xsel 
+fi
+
+if ! which nvim; then
+    echo "neovim not found, installing neovim..."
+    sudo snap install nvim --classic
+fi
+
+mkdir -p ~/.config/nvim
+cp -r ~/dotfiles/init.lua/* ~/.config/nvim
+
+git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
+

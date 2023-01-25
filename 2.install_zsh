@@ -1,0 +1,21 @@
+#!/bin/bash
+
+sudo apt update
+
+if ! which zsh; then
+    echo "Zsh not found, installing Zsh..."
+    sudo apt install zsh
+fi
+
+chsh -s $(which zsh)
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+echo "plugins=(git zsh-autosuggestions zsh-syntax-highlighting)" >> ~/.zshrc
+
+echo "ZSH_THEME='powerlevel10k/powerlevel10k'" >> ~/.zshrc
+
