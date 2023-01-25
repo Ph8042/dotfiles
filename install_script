@@ -2,18 +2,15 @@
 
 sudo apt-get update
 
-
-if ! which flatpak; then
-    echo "Flatpak not found, installing Flatpak..."
-    sudo apt-get install flatpak
-fi
-
-
 if ! which nvim; then
     echo "Neovim not found, installing Neovim..."
-    flatpak install flathub io.neovim.nvim
+    sudo snap install nvim --classic
 fi
 
+mkdir -p ~/.config/nvim
 cp -r ~/dotfiles/init.lua/* ~/.config/nvim
+
+git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 
