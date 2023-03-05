@@ -1,40 +1,57 @@
 #!/bin/bash
 
-sudo apt update
-
-# Download ZSH
-if ! which zsh; then
-    echo "Zsh not found, installing Zsh..."
-    sudo apt install zsh
+# Check if Homebrew is installed and install if necessary
+if ! which brew > /dev/null 2>&1; then
+    echo "Homebrew not found, installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
-# Set ZSH as default
-chsh -s $(which zsh)
+# Install Zsh if necessary
+if ! which zsh > /dev/null 2>&1; then
+    echo "Zsh not found, installing Zsh..."
+    brew install zsh
+fi
 
-# Download Oh-My-Zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# Set Zsh as default shell
+if [ "$SHELL" != "$(which zsh)" ]; then
+    echo "Changing default shell to Zsh..."
+    chsh -s $(which zsh)
+fi
 
-# Download plugins for Oh-My-Zsh
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# Install Oh-My-Zsh
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    echo "Installing Oh-My-Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
 
-# Add and replace theme and plugins in .zshrc file
-echo "plugins=(git zsh-autosuggestions zsh-syntax-highlighting)" >> ~/.zshrc
-echo "ZSH_THEME='powerlevel10k/powerlevel10k'" >> ~/.zshrc
+# Install plugins for Oh-My-Zsh
+if [ ! -d "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
+    echo "Installing Powerlevel10k theme..."
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$HOME/.oh-my-zsh/custom/themes/powerlevel10k"
+fi
 
-# Download the MesloFont
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
+    echo "Installing Zsh Autosuggestions plugin..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+fi
 
-# Move the downloaded fonts to the user's local font directory
-mkdir -p ~/.local/share/fonts
-mv MesloLGS* ~/.local/share/fonts/
+if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
+    echo "Installing Zsh Syntax Highlighting plugin..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+fi
 
-# Refresh font cache
-fc-cache -f -v
+if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/you-should-use" ]; then
+    echo "Installing You Should Use plugin..."
+    git clone https://github.com/MichaelAquilina/zsh-you-should-use.git "$HOME/.oh-my-zsh/custom/plugins/you-should-use"
+fi
 
-# Set MesloFont as the default font in the terminal
-gsettings set org.gnome.terminal.legacy.profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')/ font 'MesloLGS NF Regular 12'
+# Install Meslo Nerd Font
+if [ ! -f "$HOME/Library/Fonts/MesloLGS NF Regular.ttf" ]; then
+    echo "Installing Meslo Nerd Font..."
+    brew tap homebrew/cask-fonts
+    brew install --cask font-meslo-nerd-font
+fi
 
+cp "$(pwd)/.zshrc" ~/.zshrc
+
+echo "Done!"
